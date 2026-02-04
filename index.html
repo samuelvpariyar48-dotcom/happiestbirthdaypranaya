@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Pranaya 🎉</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #ffffff;
+    color: #222;
+}
+
+/* Fireworks canvas */
+#fireworks {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Layout */
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    position: relative;
+    z-index: 2;
+}
+
+.card {
+    display: flex;
+    gap: 40px;
+    max-width: 1100px;
+    width: 100%;
+    align-items: center;
+}
+
+/* Image */
+.card img {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* Message */
+.message {
+    max-width: 520px;
+}
+
+.message h1 {
+    font-size: 2.6rem;
+    margin-bottom: 20px;
+}
+
+#typing {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+footer {
+    margin-top: 25px;
+    font-weight: 500;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+    .card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .message {
+        max-width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎆 Fireworks -->
+<canvas id="fireworks"></canvas>
+
+<div class="wrapper">
+    <div class="card">
+
+        <!-- Image LEFT -->
+        <img src="sister.jpg" alt="Pranaya">
+
+        <!-- Message RIGHT -->
+        <div class="message">
+            <h1>Happy Birthday, Pranaya 🎂</h1>
+            <div id="typing"></div>
+            <footer>— Samuel Pariyar</footer>
+        </div>
+
+    </div>
+</div>
+
+<script>
+/* ✨ Typing effect */
+const text = `Happy Birthday, Akka!! 🎉
+
+Thank you for always being by my side and supporting me.
+Even though we didn’t speak to each other so much,
+it felt like very little time but many long conversations.
+
+Thank you for encouraging and motivating me every time.
+Thanks for the constant love and support.
+So grateful!! 💖`;
+
+let i = 0;
+const speed = 35;
+const typing = document.getElementById("typing");
+
+function typeText() {
+    if (i < text.length) {
+        typing.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeText, speed);
+    }
+}
+typeText();
+
+/* 🎆 Fireworks (play once) */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+let fired = false;
+
+function firework(x, y) {
+    for (let i = 0; i < 120; i++) {
+        particles.push({
+            x, y,
+            angle: Math.random() * Math.PI * 2,
+            speed: Math.random() * 6 + 2,
+            radius: 2,
+            life: 60,
+            color: `hsl(${Math.random()*360},100%,50%)`
+        });
+    }
+}
+
+function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p, index) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.life--;
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fill();
+        if (p.life <= 0) particles.splice(index,1);
+    });
+    if (particles.length > 0) requestAnimationFrame(animate);
+}
+
+if (!fired) {
+    fired = true;
+    firework(canvas.width / 2, canvas.height / 3);
+    setTimeout(() => firework(canvas.width / 4, canvas.height / 2), 300);
+    setTimeout(() => firework(canvas.width * 0.75, canvas.height / 2), 600);
+    animate();
+}
+</script>
+
+</body>
+</html>
